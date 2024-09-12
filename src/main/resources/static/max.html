@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Max</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #113b42;
+        color: cadetblue;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .conteiner {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+        text-align: center;
+    }
+</style>
+<body>
+<a href="/">
+    <div class="conteiner">
+        A little about myself <p>↘️️</p>
+    </div>
+    <div class="conteiner">
+        My name is Max <p>🎊</p>
+    </div>
+</a>
+<script>
+    const el = document.querySelector("div");
+    el.addEventListener("click", (event) => {
+        event.stopPropagation();event.preventDefault();
+        scroll({top: innerHeight, behavior: "smooth"});
+    });
+</script>
+</body>
+</html>
