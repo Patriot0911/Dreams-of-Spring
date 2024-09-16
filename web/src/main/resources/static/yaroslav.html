@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaroslav's page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('./assets/anime-bg-4k.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            text-align: center;
+            border: 2px solid black;
+            color: white;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+
+        .run-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .run-button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-top-left {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .button-top-left:hover {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="./team.html" class="button-top-left">Go to Team</a>
+    <h1>This is Yaroslav's page</h1>
+    <p>Click here to get some facts about me</p>
+    <a href="https://www.youtube.com/watch?v=fMSS6diyXQE" class="run-button" id="runButton">Click Me!</a>
+</div>
+
+<script>
+    const button = document.getElementById("runButton");
+
+    button.addEventListener("mouseover", () => {
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        const randomX = Math.random() * (windowWidth - button.offsetWidth);
+        const randomY = Math.random() * (windowHeight - button.offsetHeight);
+
+        button.style.position = "absolute";
+        button.style.left = `${randomX}px`;
+        button.style.top = `${randomY}px`;
+    });
+</script>
+</body>
+</html>
