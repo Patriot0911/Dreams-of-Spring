@@ -57,6 +57,8 @@ tr:nth-child(even) {
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
+    flex-direction: row;
+    height: 50px;
 }
 
 .sorting-buttons button {
