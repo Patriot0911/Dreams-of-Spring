@@ -7,11 +7,11 @@ import java.util.UUID;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class TaskRepository {
-    private final List<Task> tasks = new ArrayList<Task>();
+    private final List<Task> tasks = new ArrayList<>();
 
     public TaskRepository() {
         tasks.add(new Task("lol", "tit", "desc", 5, LocalDate.now(), false));
@@ -19,6 +19,20 @@ public class TaskRepository {
 
     public List<Task> getAll() {
         return tasks;
+    }
+
+    public List<Task> getAllSorted(String sortBy, String order) {
+        return tasks.stream()
+                .sorted((task1, task2) -> {
+                    int comparison = 0;
+                    if ("date".equalsIgnoreCase(sortBy)) {
+                        comparison = task1.getDate().compareTo(task2.getDate());
+                    } else if ("priority".equalsIgnoreCase(sortBy)) {
+                        comparison = Integer.compare(task1.getPriority(), task2.getPriority());
+                    }
+                    return "desc".equalsIgnoreCase(order) ? -comparison : comparison;
+                })
+                .collect(Collectors.toList());
     }
 
     public Task create(Task task) {
@@ -40,16 +54,13 @@ public class TaskRepository {
     }
 
     public Task update(Task task) {
-        Optional<Task> exTask = tasks.stream()
-                .filter(task1 -> task1.getId().equals(task.getId()))
-                .findFirst();
-
-        if (exTask.isPresent()) {
-            Task someTask = exTask.get();
-            tasks.set(tasks.indexOf(someTask), task);
-            return task;
-        }
-
-        return null;
+        return tasks.stream()
+                .filter(t -> t.getId().equals(task.getId()))
+                .findFirst()
+                .map(existingTask -> {
+                    tasks.set(tasks.indexOf(existingTask), task);
+                    return task;
+                })
+                .orElse(null);
     }
 }
