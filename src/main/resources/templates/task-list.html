@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Task List</title>
     <link rel="stylesheet" href="/styles/task-list.css">
 </head>
+
 <body>
     <script>
         function deleteTask(taskId) {
-            if(confirm(`Are you sure you want to delete this task? (${taskId})`)) {
+            if (confirm(`Are you sure you want to delete this task? (${taskId})`)) {
                 fetch(`/tasks/${taskId}`, {
                     method: 'DELETE',
                 }).then((response) => {
@@ -56,10 +58,20 @@
 
             document.getElementById('edit-form-wrapper').style.display = 'block';
         };
+        function sortTasks(sortBy, order) {
+            const url = `/tasks?sortBy=${sortBy}&order=${order}`;
+            window.location.href = url;
+        }
     </script>
     <main>
         <div class="tasks-wrapper">
             <h1>Tasks</h1>
+            <div class="sorting-buttons">
+                <button onclick="sortTasks('date', 'asc')">Sort by Date (Ascending)</button>
+                <button onclick="sortTasks('date', 'desc')">Sort by Date (Descending)</button>
+                <button onclick="sortTasks('priority', 'asc')">Sort by Priority (Ascending)</button>
+                <button onclick="sortTasks('priority', 'desc')">Sort by Priority (Descending)</button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -82,7 +94,8 @@
                         <td th:text="${task.priority}">1</td>
                         <td th:text="${task.completed}">1</td>
                         <td>
-                            <button th:onclick="editTask([[${task.id}]], [[${task.title}]], [[${task.description}]], [[${task.date}]], [[${task.priority}]], [[${task.completed}]])">Edit</button>
+                            <button
+                                th:onclick="editTask([[${task.id}]], [[${task.title}]], [[${task.description}]], [[${task.date}]], [[${task.priority}]], [[${task.completed}]])">Edit</button>
                         </td>
                         <td>
                             <button th:onclick="deleteTask([[${task.id}]]);">Delete</button>
@@ -92,40 +105,34 @@
             </table>
         </div>
         <div id="edit-form-wrapper" style="display: none;">
-            <form
-                id="edit-form"
-                onsubmit="test(event);"
-            >
+            <form id="edit-form" onsubmit="test(event);">
                 <h2>Edit Task</h2>
-                <input type="hidden" id="edit-id" name="id"  />
+                <input type="hidden" id="edit-id" name="id" />
                 <div>
                     <label for="edit-title">Task Title:</label>
-                    <input type="text" id="edit-title" name="title" required/><br/>
+                    <input type="text" id="edit-title" name="title" required /><br />
                 </div>
 
                 <div>
                     <label for="edit-description">Description:</label>
-                    <textarea id="edit-description" name="description" required></textarea><br/>
+                    <textarea id="edit-description" name="description" required></textarea><br />
                 </div>
 
                 <div>
                     <label for="edit-priority">Task Priority:</label>
-                    <input type="number" id="edit-priority" name="priority"  required/><br/>
+                    <input type="number" id="edit-priority" name="priority" required /><br />
                 </div>
 
                 <div>
                     <label for="edit-date">Due Date:</label>
-                    <input type="date" id="edit-date" name="date"  required/><br/>
+                    <input type="date" id="edit-date" name="date" required /><br />
                 </div>
 
                 <div>
                     <label for="edit-completed">Completed:</label>
-                    <input type="checkbox" id="edit-completed" name="completed" /><br/>
+                    <input type="checkbox" id="edit-completed" name="completed" /><br />
                 </div>
-                <input
-                    type="submit"
-                    value="Save"
-                />
+                <input type="submit" value="Save" />
             </form>
         </div>
         <div>
@@ -133,31 +140,32 @@
                 <h2>New Task</h2>
                 <div>
                     <label for="title">Task Title:</label>
-                    <input type="text" id="title" th:field="*{title}" required/><br/>
+                    <input type="text" id="title" th:field="*{title}" required /><br />
                 </div>
 
                 <div>
                     <label for="description">Description:</label>
-                    <textarea id="description" th:field="*{description}" required></textarea><br/>
+                    <textarea id="description" th:field="*{description}" required></textarea><br />
                 </div>
 
                 <div>
                     <label for="priority">Task Priority:</label>
-                    <input type="number" id="priority" th:field="*{priority}" required/><br/>
+                    <input type="number" id="priority" th:field="*{priority}" required /><br />
                 </div>
 
                 <div>
                     <label for="date">Due Date:</label>
-                    <input type="date" id="date" th:field="*{date}" required/><br/>
+                    <input type="date" id="date" th:field="*{date}" required /><br />
                 </div>
 
                 <div>
                     <label for="completed">Completed:</label>
-                    <input type="checkbox" id="completed" th:field="*{completed}"/><br/>
+                    <input type="checkbox" id="completed" th:field="*{completed}" /><br />
                 </div>
-                <input type="submit" value="Add Task"/>
+                <input type="submit" value="Add Task" />
             </form>
         </div>
     </main>
 </body>
+
 </html>

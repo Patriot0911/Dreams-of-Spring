@@ -12,6 +12,7 @@ import java.util.List;
 public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -19,9 +20,13 @@ public class TaskService {
         return taskRepository.getAll();
     }
 
+    public List<Task> getSortedTasks(String sortBy, String order) {
+        return taskRepository.getAllSorted(sortBy, order);
+    }
+
     public Task getTask(String taskId) {
         return taskRepository.getById(taskId);
-    };
+    }
 
     public Task addTask(Task task) {
         return taskRepository.create(task);
@@ -36,7 +41,6 @@ public class TaskService {
     }
 
     public Task protoTask() {
-        Task emptyTask = applicationContext.getBean(Task.class);
-        return emptyTask;
+        return applicationContext.getBean(Task.class);
     }
 }

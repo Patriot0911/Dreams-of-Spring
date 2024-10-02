@@ -15,8 +15,16 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    public String getTasks(Model model) {
-        model.addAttribute("tasks", taskService.getAllTasks());
+    public String getTasks(
+        @RequestParam(required = false) String sortBy, 
+        @RequestParam(required = false) String order, 
+        Model model
+    ) {
+        if (sortBy != null) {
+            model.addAttribute("tasks", taskService.getSortedTasks(sortBy, order));
+        } else {
+            model.addAttribute("tasks", taskService.getAllTasks());
+        }
         model.addAttribute("new_task", taskService.protoTask());
         return "task-list";
     }
