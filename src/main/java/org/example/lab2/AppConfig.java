@@ -1,18 +1,16 @@
 package org.example.lab2;
 
-import org.example.lab2.service.TaskService;
+import org.example.lab2.entity.Task;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class AppConfig {
-    @Bean()
-    public static String hello() {
-        return "Hello World!";
-    }
-
-    @Bean(name = "TaskService")
-    public TaskService taskService() {
-        return new TaskService();
-    }
+    @Bean(name="createTask")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    Task createTask() {
+        return new Task(null, null, null, 0, null, false);
+    };
 }
