@@ -3,8 +3,7 @@ package org.example.lab2.service;
 import org.example.lab2.entity.Task;
 import org.example.lab2.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +12,19 @@ import java.util.List;
 public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     public List<Task> getAllTasks() {
         return taskRepository.getAll();
     }
 
-    public void addTask(Task task) {
-        taskRepository.create(task);
+    public Task getTask(String taskId) {
+        return taskRepository.getById(taskId);
+    };
+
+    public Task addTask(Task task) {
+        return taskRepository.create(task);
     }
 
     public void deleteTask(String taskId) {
@@ -30,9 +35,8 @@ public class TaskService {
         return taskRepository.update(task);
     }
 
-    @Bean
-    @Scope("prototype")
     public Task protoTask() {
-        return new Task(null, "Task", null, 0, null, false);
+        Task emptyTask = applicationContext.getBean(Task.class);
+        return emptyTask;
     }
 }

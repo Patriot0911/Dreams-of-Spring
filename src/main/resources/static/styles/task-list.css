@@ -1,0 +1,52 @@
+main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    min-height: 100dvh;
+}
+main div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem;
+}
+.add-form {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.tasks-wrapper {
+    height: 100%;
+    background-color: rgba(237, 228, 228, 0.754);
+    box-shadow: 0px -2px 4px black;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 500px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    background-color: aliceblue;
+}
+th.action {
+    width: 4rem;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    text-align: center;
+}
+td button {
+    width: 100%;
+}
+tr:nth-child(even) {
+    background-color: rgba(121, 255, 210, 0.687);
+}

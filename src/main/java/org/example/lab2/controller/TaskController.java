@@ -3,7 +3,7 @@ package org.example.lab2.controller;
 import org.example.lab2.entity.Task;
 import org.example.lab2.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,17 +12,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tasks")
 public class TaskController {
     @Autowired
-    @Qualifier("TaskService")
     private TaskService taskService;
 
     @GetMapping
     public String getTasks(Model model) {
         model.addAttribute("tasks", taskService.getAllTasks());
+        model.addAttribute("new_task", taskService.protoTask());
         return "task-list";
     }
 
+    @GetMapping("/{id}")
+    public String getTask(@PathVariable String id, Model model) {
+        model.addAttribute("specific_task", taskService.getTask(id));
+        return "redirect:/tasks";
+    }
+
     @PostMapping
-    public String addTask(@ModelAttribute Task task) {
+    public String addTask(@ModelAttribute("new_task") Task task) {
         taskService.addTask(task);
         return "redirect:/tasks";
     }
@@ -33,10 +39,13 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    @PutMapping
-    public String updateTask(@ModelAttribute Task task, Model model) {
-        Task updatedTask = taskService.updateTask(task);
-        model.addAttribute("task", updatedTask);
-        return "task-edit";
+    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public String updateTask(
+        // @ModelAttribute("task") Task task
+        @RequestBody Task task
+    ) {
+        taskService.updateTask(task);
+        System.out.println(task.getId());
+        return "redirect:/tasks";
     }
 }

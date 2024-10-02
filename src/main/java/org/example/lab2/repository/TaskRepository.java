@@ -3,6 +3,7 @@ package org.example.lab2.repository;
 import org.example.lab2.entity.Task;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,11 @@ public class TaskRepository {
         return tasks;
     }
 
-    public void create(Task task) {
+    public Task create(Task task) {
+        String uuid = UUID.randomUUID().toString();
+        task.setId(uuid);
         tasks.add(task);
+        return task;
     }
 
     public void deleteById(String id) {
