@@ -23,31 +23,6 @@
                 });
             };
         };
-        function test(event) {
-            event.preventDefault();
-            putTask();
-        };
-        function putTask() {
-            const task = {
-                id: document.getElementById('edit-id').value,
-                title: document.getElementById('edit-title').value,
-                description: document.getElementById('edit-description').value,
-                priority: parseInt(document.getElementById('edit-priority').value),
-                date: document.getElementById('edit-date').value,
-                completed: document.getElementById('edit-completed').checked,
-            };
-            fetch("/tasks", {
-                method: 'PUT',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(task),
-            }).then(
-                (res) => {
-                    console.log(res);
-                }
-            );
-        };
         function editTask(taskId, title, description, date, priority, completed) {
             document.getElementById('edit-id').value = taskId;
             document.getElementById('edit-title').value = title;
@@ -105,32 +80,32 @@
             </table>
         </div>
         <div id="edit-form-wrapper" style="display: none;">
-            <form id="edit-form" onsubmit="test(event);">
+            <form id="edit-form" th:object="${edit_task}" th:action="@{/tasks}" th:method="put">
                 <h2>Edit Task</h2>
-                <input type="hidden" id="edit-id" name="id" />
+                <input type="hidden" id="edit-id" name="id" th:field="*{id}"/>
                 <div>
                     <label for="edit-title">Task Title:</label>
-                    <input type="text" id="edit-title" name="title" required /><br />
+                    <input type="text" id="edit-title" name="title" required th:field="*{title}"/><br />
                 </div>
 
                 <div>
                     <label for="edit-description">Description:</label>
-                    <textarea id="edit-description" name="description" required></textarea><br />
+                    <textarea id="edit-description" name="description" required th:field="*{description}"></textarea><br />
                 </div>
 
                 <div>
                     <label for="edit-priority">Task Priority:</label>
-                    <input type="number" id="edit-priority" name="priority" required /><br />
+                    <input type="number" id="edit-priority" name="priority" required th:field="*{priority}"/><br />
                 </div>
 
                 <div>
                     <label for="edit-date">Due Date:</label>
-                    <input type="date" id="edit-date" name="date" required /><br />
+                    <input type="date" id="edit-date" name="date" required th:field="*{date}"/><br />
                 </div>
 
                 <div>
                     <label for="edit-completed">Completed:</label>
-                    <input type="checkbox" id="edit-completed" name="completed" /><br />
+                    <input type="checkbox" id="edit-completed" name="completed" th:field="*{completed}" /><br />
                 </div>
                 <input type="submit" value="Save" />
             </form>

@@ -14,7 +14,8 @@ public class TaskRepository {
     private final List<Task> tasks = new ArrayList<>();
 
     public TaskRepository() {
-        tasks.add(new Task("lol", "tit", "desc", 5, LocalDate.now(), false));
+        String uuid = UUID.randomUUID().toString();
+        tasks.add(new Task(uuid, "Do homework", "Some math", 2, LocalDate.now(), false));
     }
 
     public List<Task> getAll() {
