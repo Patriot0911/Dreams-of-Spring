@@ -3,7 +3,6 @@ package org.example.lab2.controller;
 import org.example.lab2.entity.Task;
 import org.example.lab2.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,8 @@ public class TaskController {
 
     @GetMapping
     public String getTasks(
-        @RequestParam(required = false) String sortBy, 
-        @RequestParam(required = false) String order, 
+        @RequestParam(required = false) String sortBy,
+        @RequestParam(required = false) String order,
         Model model
     ) {
         if (sortBy != null) {
@@ -26,6 +25,7 @@ public class TaskController {
             model.addAttribute("tasks", taskService.getAllTasks());
         }
         model.addAttribute("new_task", taskService.protoTask());
+        model.addAttribute("edit_task", taskService.protoTask());
         return "task-list";
     }
 
@@ -47,10 +47,9 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping()
     public String updateTask(
-        // @ModelAttribute("task") Task task
-        @RequestBody Task task
+        @ModelAttribute Task task
     ) {
         taskService.updateTask(task);
         System.out.println(task.getId());
