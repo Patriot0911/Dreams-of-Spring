@@ -1,7 +1,7 @@
-package org.example.lab2.service;
+package org.dreamsofspring.lab3.service;
 
-import org.example.lab2.entity.Task;
-import org.example.lab2.repository.TaskRepository;
+import org.dreamsofspring.lab3.repository.TaskRepository;
+import org.dreamsofspring.lab3.entity.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;

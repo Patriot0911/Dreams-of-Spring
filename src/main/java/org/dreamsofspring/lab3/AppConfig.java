@@ -1,6 +1,6 @@
-package org.example.lab2;
+package org.dreamsofspring.lab3;
 
-import org.example.lab2.entity.Task;
+import org.dreamsofspring.lab3.entity.Task;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

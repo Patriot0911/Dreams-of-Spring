@@ -1,6 +1,6 @@
-package org.example.lab2.repository;
+package org.dreamsofspring.lab3.repository;
 
-import org.example.lab2.entity.Task;
+import org.dreamsofspring.lab3.entity.Task;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
