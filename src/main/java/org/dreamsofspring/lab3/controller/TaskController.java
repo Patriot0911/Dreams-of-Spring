@@ -1,7 +1,7 @@
-package org.example.lab2.controller;
+package org.dreamsofspring.lab3.controller;
 
-import org.example.lab2.entity.Task;
-import org.example.lab2.service.TaskService;
+import org.dreamsofspring.lab3.entity.Task;
+import org.dreamsofspring.lab3.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

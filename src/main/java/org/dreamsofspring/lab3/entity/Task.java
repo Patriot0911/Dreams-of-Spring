@@ -1,4 +1,4 @@
-package org.example.lab2.entity;
+package org.dreamsofspring.lab3.entity;
 
 import java.time.LocalDate;
 
