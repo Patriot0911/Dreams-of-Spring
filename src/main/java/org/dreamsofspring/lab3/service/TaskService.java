@@ -10,11 +10,13 @@ import java.util.List;
 
 @Service
 public class TaskService {
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    public TaskService(TaskRepository taskRepository, ApplicationContext applicationContext) {
+        this.taskRepository = taskRepository;
+        this.applicationContext = applicationContext;
+    }
 
     public List<Task> getAllTasks() {
         return taskRepository.getAll();
