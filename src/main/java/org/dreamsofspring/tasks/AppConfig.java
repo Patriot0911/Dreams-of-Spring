@@ -1,6 +1,6 @@
-package org.dreamsofspring.lab3;
+package org.dreamsofspring.tasks;
 
-import org.dreamsofspring.lab3.entity.Task;
+import org.dreamsofspring.tasks.entity.Task;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class AppConfig {
-    @Bean(name="createTask")
+    @Bean(name = "createTask")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    Task createTask() {
+    public Task createTask() {
         return new Task(null, null, null, 0, null, false);
-    };
+    }
 }

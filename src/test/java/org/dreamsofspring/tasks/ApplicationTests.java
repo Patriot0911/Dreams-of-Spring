@@ -1,10 +1,10 @@
-package org.dreamsofspring.lab3;
+package org.dreamsofspring.tasks;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Lab2ApplicationTests {
+class ApplicationTests {
 
     @Test
     void contextLoads() {

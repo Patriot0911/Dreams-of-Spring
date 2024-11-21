@@ -1,4 +1,4 @@
-package org.dreamsofspring.lab3.entity;
+package org.dreamsofspring.tasks.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ public class Task {
     private String id;
     private String title;
     private String description;
-    private int priority;
+    private Integer priority;
     private LocalDate date;
-    private boolean completed;
+    private Boolean completed;
 }

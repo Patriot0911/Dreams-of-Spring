@@ -1,8 +1,7 @@
-package org.dreamsofspring.lab3.controller;
+package org.dreamsofspring.tasks.controller;
 
-import org.dreamsofspring.lab3.entity.Task;
-import org.dreamsofspring.lab3.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.dreamsofspring.tasks.entity.Task;
+import org.dreamsofspring.tasks.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class TaskController {
         if (sortBy != null) {
             model.addAttribute("tasks", taskService.getSortedTasks(sortBy, order));
         } else {
-            model.addAttribute("tasks", taskService.getAllTasks());
+            model.addAttribute("tasks", taskService.getAllTasks(null, 0, Integer.MAX_VALUE));
         }
         model.addAttribute("new_task", taskService.protoTask());
         model.addAttribute("edit_task", taskService.protoTask());

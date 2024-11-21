@@ -1,6 +1,6 @@
-package org.dreamsofspring.lab3.repository;
+package org.dreamsofspring.tasks.repository;
 
-import org.dreamsofspring.lab3.entity.Task;
+import org.dreamsofspring.tasks.entity.Task;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -14,16 +14,19 @@ public class TaskRepository {
     private final List<Task> tasks = new ArrayList<>();
 
     public TaskRepository() {
-        String uuid = UUID.randomUUID().toString();
-        tasks.add(new Task(uuid, "Do homework", "Some math", 2, LocalDate.now(), false));
+        this.tasks.add(new Task(UUID.randomUUID().toString(), "Watch GoT", "Just spend all your free time", 1, LocalDate.now().minusMonths(1), false));
+
+        this.tasks.add(new Task(UUID.randomUUID().toString(), "Do homework", "Some math", 2, LocalDate.now(), false));
+
+        this.tasks.add(new Task(UUID.randomUUID().toString(), "Go outside", "Touch some grass", 3, LocalDate.now().plusYears(4), true));
     }
 
     public List<Task> getAll() {
-        return tasks;
+        return this.tasks;
     }
 
     public List<Task> getAllSorted(String sortBy, String order) {
-        return tasks.stream()
+        return this.tasks.stream()
                 .sorted((task1, task2) -> {
                     int comparison = 0;
                     if ("date".equalsIgnoreCase(sortBy)) {
@@ -39,23 +42,21 @@ public class TaskRepository {
     public Task create(Task task) {
         String uuid = UUID.randomUUID().toString();
         task.setId(uuid);
-        tasks.add(task);
+
+        this.tasks.add(task);
+
         return task;
     }
 
-    public void deleteById(String id) {
-        tasks.removeIf(task -> task.getId().equals(id));
-    }
-
     public Task getById(String id) {
-        return tasks.stream()
+        return this.tasks.stream()
                 .filter(task -> task.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
     public Task update(Task task) {
-        return tasks.stream()
+        return this.tasks.stream()
                 .filter(t -> t.getId().equals(task.getId()))
                 .findFirst()
                 .map(existingTask -> {
@@ -63,5 +64,14 @@ public class TaskRepository {
                     return task;
                 })
                 .orElse(null);
+    }
+
+    public Task deleteById(String id) {
+        Task taskToDelete = this.getById(id);
+        if (taskToDelete == null) return null;
+
+        this.tasks.removeIf(task -> task.getId().equals(id));
+
+        return taskToDelete;
     }
 }

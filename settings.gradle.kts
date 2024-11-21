@@ -1,1 +1,1 @@
-rootProject.name = "lab-2"
+rootProject.name = "tasks-manager"
