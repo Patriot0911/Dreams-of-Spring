@@ -1,5 +1,6 @@
 package org.dreamsofspring.tasks.controller;
 
+import org.dreamsofspring.tasks.controller.interfaces.TaskApiControllerInterface;
 import org.dreamsofspring.tasks.entity.Task;
 import org.dreamsofspring.tasks.service.TaskService;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +13,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tasks")
-public class TaskApiController {
+public class TaskApiController implements TaskApiControllerInterface {
     private final TaskService taskService;
 
     public TaskApiController(TaskService taskService) {
         this.taskService = taskService;
     }
 
+    @Override
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks(
             @RequestParam(required = false, name = "page") Optional<Integer> pageNumber,
@@ -34,6 +36,7 @@ public class TaskApiController {
         );
     }
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable String id) {
         Task task = this.taskService.getTask(id);
@@ -43,6 +46,7 @@ public class TaskApiController {
                 ResponseEntity.notFound().build();
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
         Task createdTask = this.taskService.addTask(task);
@@ -55,6 +59,7 @@ public class TaskApiController {
         return ResponseEntity.created(uri).build();
     }
 
+    @Override
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTaskById(@PathVariable String id, @RequestBody Task task) {
         if (this.taskService.getTask(id) == null) {
@@ -67,13 +72,14 @@ public class TaskApiController {
         return ResponseEntity.ok(updatedTask);
     }
 
+    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Task> deleteTaskById(@PathVariable String id) {
         if (this.taskService.getTask(id) == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
 
-        Task task = this.taskService.deleteTask(id);
-        return ResponseEntity.ok(task);
+        this.taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }
