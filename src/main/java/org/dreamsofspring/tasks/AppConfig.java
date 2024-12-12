@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 public class AppConfig {
     @Bean(name = "createTask")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Task createTask() {
-        return new Task(null, null, null, 0, null, false);
+    Task createTask() {
+        return new Task(null, null, 0, null, false);
     }
 }

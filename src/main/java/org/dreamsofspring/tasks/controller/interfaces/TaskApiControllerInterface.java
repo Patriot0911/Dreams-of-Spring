@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.dreamsofspring.tasks.entity.Task;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,7 +20,7 @@ public interface TaskApiControllerInterface {
 
     @Operation(
         summary = "Get all Tasks",
-        description = "Get a paginated list of tasks filtered by task properties"
+        description = "Get a paginated list of tasks"
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -54,8 +55,8 @@ public interface TaskApiControllerInterface {
             responseCode = "404",
             description = "Task Not Found",
             content = @Content(mediaType = "application/json")
-        )    
-    })    
+        )
+    })
     ResponseEntity<Task> getTaskById(
         @Parameter(name = "id", description = "Task id", example = "d1c0217d-1f95-4cc0-b048-ca29a3823709", required = true)
         String id
@@ -99,7 +100,7 @@ public interface TaskApiControllerInterface {
         Task task
     );
 
-    
+
     @Operation(
         summary = "Delete Task by Id",
         description = "Delete Task by identifier"
@@ -116,4 +117,16 @@ public interface TaskApiControllerInterface {
         String id
     );
 
-}
+    @Operation(
+        summary = "Get all Completed Tasks",
+        description = "Get a completed list of tasks"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Tasks retrieved successfully",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Task.class))
+        )
+    })
+    ResponseEntity<List<Task>> getAllCompleted(@RequestParam(required = true) Boolean state);
+};

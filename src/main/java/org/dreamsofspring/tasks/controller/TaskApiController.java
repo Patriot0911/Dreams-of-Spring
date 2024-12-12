@@ -29,10 +29,17 @@ public class TaskApiController implements TaskApiControllerInterface {
     ) {
         return ResponseEntity.ok(
                 this.taskService.getAllTasks(
-                        filteringTask,
                         pageSize.orElse(Integer.MAX_VALUE),
-                        pageNumber.orElse(1)
+                        pageNumber.orElse(0)
                 )
+        );
+    }
+
+    @Override
+    @GetMapping("/completed")
+    public ResponseEntity<List<Task>> getAllCompleted(@RequestParam(required = true) Boolean state) {
+        return ResponseEntity.ok(
+                this.taskService.findCompletedTasks(state)
         );
     }
 

@@ -1,77 +1,106 @@
 package org.dreamsofspring.tasks.repository;
 
 import org.dreamsofspring.tasks.entity.Task;
+import org.dreamsofspring.tasks.mapper.TaskRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
-public class TaskRepository {
-    private final List<Task> tasks = new ArrayList<>();
+public class TaskRepository implements TaskDao {
+    private final JdbcTemplate jdbcTemplate;
 
-    public TaskRepository() {
-        this.tasks.add(new Task(UUID.randomUUID().toString(), "Watch GoT", "Just spend all your free time", 1, LocalDate.now().minusMonths(1), false));
+    public TaskRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    };
 
-        this.tasks.add(new Task(UUID.randomUUID().toString(), "Do homework", "Some math", 2, LocalDate.now(), false));
+    public List<Task> getAll(int limit, int skip) {
+        String sql = """
+            SELECT *
+            FROM (
+                SELECT t.*, ROWNUM AS rnum
+                FROM tasks t
+                WHERE ROWNUM <= ? + ?
+            )
+            WHERE rnum > ?
+            ORDER BY task_date DESC
+        """;
+        return jdbcTemplate.query(sql, new TaskRowMapper(), limit, skip, skip);
+    };
 
-        this.tasks.add(new Task(UUID.randomUUID().toString(), "Go outside", "Touch some grass", 3, LocalDate.now().plusYears(4), true));
-    }
+    public List<Task> searchByTitle(String keyword) {
+        String sql = "SELECT * FROM tasks WHERE title LIKE ?";
+        String searchPattern = "%" + keyword + "%";
 
-    public List<Task> getAll() {
-        return this.tasks;
-    }
+        return jdbcTemplate.query(sql, new Object[]{searchPattern}, new TaskRowMapper());
+    };
 
     public List<Task> getAllSorted(String sortBy, String order) {
-        return this.tasks.stream()
-                .sorted((task1, task2) -> {
-                    int comparison = 0;
-                    if ("date".equalsIgnoreCase(sortBy)) {
-                        comparison = task1.getDate().compareTo(task2.getDate());
-                    } else if ("priority".equalsIgnoreCase(sortBy)) {
-                        comparison = Integer.compare(task1.getPriority(), task2.getPriority());
-                    }
-                    return "desc".equalsIgnoreCase(order) ? -comparison : comparison;
-                })
-                .collect(Collectors.toList());
-    }
+        String column = switch (sortBy.toLowerCase()) {
+            case "priority" -> "priority";
+            case "date" -> "task_date";
+            default -> "id";
+        };
+        String sortOrder = "desc".equalsIgnoreCase(order) ? "DESC" : "ASC";
+        String sql = String.format("SELECT * FROM tasks ORDER BY %s %s", column, sortOrder);
+        return jdbcTemplate.query(sql, new TaskRowMapper());
+    };
 
-    public Task create(Task task) {
-        String uuid = UUID.randomUUID().toString();
-        task.setId(uuid);
-
-        this.tasks.add(task);
-
-        return task;
-    }
+    public List<Task> findCompleted(boolean completed) {
+        String sql = "SELECT * FROM tasks WHERE completed = ? ORDER BY task_date DESC";
+        return jdbcTemplate.query(sql, new TaskRowMapper(), completed ? 1 : 0);
+    };
 
     public Task getById(String id) {
-        return this.tasks.stream()
-                .filter(task -> task.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
+        String sql = "SELECT * FROM tasks WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), id);
+    };
 
     public Task update(Task task) {
-        return this.tasks.stream()
-                .filter(t -> t.getId().equals(task.getId()))
-                .findFirst()
-                .map(existingTask -> {
-                    tasks.set(tasks.indexOf(existingTask), task);
-                    return task;
-                })
-                .orElse(null);
-    }
+        String updateSql = "UPDATE tasks SET title = ?, description = ?, priority = ?, task_date = ?, completed = ? WHERE id = ?";
+        int rowsAffected = jdbcTemplate.update(updateSql,
+                task.getTitle(),
+                task.getDescription(),
+                task.getPriority(),
+                java.sql.Date.valueOf(task.getDate()),
+                task.getCompleted(),
+                task.getId()
+        );
+        if (rowsAffected == 0)
+            throw new RuntimeException("Task update failed or task not found");
+        String selectSql = "SELECT * FROM tasks WHERE id = ?";
+        return jdbcTemplate.queryForObject(selectSql, new TaskRowMapper(), task.getId());
+    };
 
-    public Task deleteById(String id) {
-        Task taskToDelete = this.getById(id);
-        if (taskToDelete == null) return null;
+    public Task create(Task task) {
+        String sql = "INSERT INTO tasks (title, description, priority, task_date, completed) " +
+            "VALUES (?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        this.tasks.removeIf(task -> task.getId().equals(id));
+        jdbcTemplate.update(connection -> {
+            var ps = connection.prepareStatement(sql, new String[] {"id"});
+            ps.setString(1, task.getTitle());
+            ps.setString(2, task.getDescription());
+            ps.setInt(3, task.getPriority());
+            ps.setDate(4, java.sql.Date.valueOf(task.getDate()));
+            ps.setBoolean(5, task.getCompleted());
+            return ps;
+        }, keyHolder);
 
-        return taskToDelete;
-    }
-}
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            task.setId(String.valueOf(generatedId.intValue()));
+        };
+
+        return task;
+    };
+
+    public String deleteById(String id) {
+        String sql = "DELETE FROM tasks WHERE id = ?";
+        int affected = jdbcTemplate.update(sql, id);
+        return String.valueOf(affected);
+    };
+};
