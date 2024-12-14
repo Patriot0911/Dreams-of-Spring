@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -47,6 +48,70 @@ public class TaskRepository implements TaskDao {
         String sortOrder = "desc".equalsIgnoreCase(order) ? "DESC" : "ASC";
         String sql = String.format("SELECT * FROM tasks ORDER BY %s %s", column, sortOrder);
         return jdbcTemplate.query(sql, new TaskRowMapper());
+    };
+
+    public List<Task> findTasksByFilters(String title, String description, Integer priority, Boolean completed) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM tasks WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (title != null) {
+            sql.append(" AND LOWER(title) LIKE LOWER(?)");
+            params.add("%" + title + "%");
+        }
+
+        if (description != null) {
+            sql.append(" AND LOWER(description) LIKE LOWER(?)");
+            params.add("%" + description + "%");
+        }
+
+        if (priority != null) {
+            sql.append(" AND priority = ?");
+            params.add(priority);
+        }
+
+        if (completed != null) {
+            sql.append(" AND completed = ?");
+            params.add(completed ? 1 : 0);
+        }
+
+        sql.append(" ORDER BY task_date DESC");
+
+        return jdbcTemplate.query(sql.toString(), params.toArray(), new TaskRowMapper());
+    };
+
+    public List<Task> findWithCondition(int limit, int skip, String title, String description, Integer priority, Boolean completed, String sortBy, String order) {
+        String column = switch (sortBy.toLowerCase()) {
+            case "priority" -> "priority";
+            case "date" -> "task_date";
+            default -> "id";
+        };
+        String sortOrder = "desc".equalsIgnoreCase(order) ? "DESC" : "ASC";
+        StringBuilder sql = new StringBuilder("SELECT * FROM tasks WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (title != null) {
+            sql.append(" AND LOWER(title) LIKE LOWER(?)");
+            params.add("%" + title + "%");
+        };
+
+        if (description != null) {
+            sql.append(" AND LOWER(description) LIKE LOWER(?)");
+            params.add("%" + description + "%");
+        };
+
+        if (priority != null) {
+            sql.append(" AND priority = ?");
+            params.add(priority);
+        };
+
+        if (completed != null) {
+            sql.append(" AND completed = ?");
+            params.add(completed ? 1 : 0);
+        };
+
+        sql.append(String.format(" ORDER BY %s %s", column, sortOrder));
+
+        return jdbcTemplate.query(sql.toString(), params.toArray(), new TaskRowMapper());
     };
 
     public List<Task> findCompleted(boolean completed) {

@@ -24,7 +24,7 @@ public class TaskController {
         if (sortBy != null) {
             model.addAttribute("tasks", taskService.getSortedTasks(sortBy, order));
         } else {
-            model.addAttribute("tasks", taskService.getAllTasks(Integer.MAX_VALUE, 0));
+            model.addAttribute("tasks", taskService.getTasks(Integer.MAX_VALUE, 0, null));
         }
         model.addAttribute("new_task", taskService.protoTask());
         model.addAttribute("edit_task", taskService.protoTask());

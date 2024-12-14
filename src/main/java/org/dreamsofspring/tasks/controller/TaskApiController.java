@@ -4,6 +4,7 @@ import org.dreamsofspring.tasks.controller.interfaces.TaskApiControllerInterface
 import org.dreamsofspring.tasks.entity.Task;
 import org.dreamsofspring.tasks.service.TaskService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,16 +23,25 @@ public class TaskApiController implements TaskApiControllerInterface {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks(
+    public ResponseEntity<List<Task>> getTasks(
             @RequestParam(required = false, name = "page") Optional<Integer> pageNumber,
             @RequestParam(required = false, name = "pageSize") Optional<Integer> pageSize,
-            @RequestBody(required = false) Task filteringTask
+            @RequestParam(required = false) MultiValueMap<String, String> params
     ) {
         return ResponseEntity.ok(
-                this.taskService.getAllTasks(
+                this.taskService.getTasks(
                         pageSize.orElse(Integer.MAX_VALUE),
-                        pageNumber.orElse(0)
+                        pageNumber.orElse(0),
+                        params
                 )
+        );
+    }
+
+    @Override
+    @GetMapping("/all")
+    public ResponseEntity<List<Task>> getAllTasks() {
+        return ResponseEntity.ok(
+                this.taskService.getAllTasks()
         );
     }
 

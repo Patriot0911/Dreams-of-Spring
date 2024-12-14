@@ -11,6 +11,8 @@ public interface TaskDao {
     List<Task> searchByTitle(String keyword);
     List<Task> getAllSorted(String sortBy, String order);
     List<Task> findCompleted(boolean completed);
+    List<Task> findTasksByFilters(String title, String description, Integer priority, Boolean completed);
+    List<Task> findWithCondition(int limit, int skip, String title, String description, Integer priority, Boolean completed, String sortBy, String order);
     Task update(Task task);
     String deleteById(String id);
 };

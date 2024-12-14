@@ -5,6 +5,7 @@ import org.dreamsofspring.tasks.entity.Task;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -18,9 +19,23 @@ public class TaskService implements TaskServiceInterface {
         this.applicationContext = applicationContext;
     }
 
-    public List<Task> getAllTasks(int pageSize, int pageNumber) {
+    public List<Task> getTasks(int pageSize, int pageNumber, MultiValueMap<String, String> params) {
         int limit = pageSize == 0 ? 10 : pageSize;
-        return this.taskRepository.getAll(limit, pageNumber);
+        if(params != null) {
+            String sortBy = params.getFirst("sortBy") != null ? params.getFirst("sortBy") : "id";
+            String order = params.getFirst("order");
+
+            String title = params.getFirst("title");
+            String description = params.getFirst("description");
+            Integer priority = params.containsKey("priority") ? Integer.parseInt(params.getFirst("priority")) : null;
+            Boolean completed = params.containsKey("completed") ? Boolean.parseBoolean(params.getFirst("completed")) : null;
+            return this.taskRepository.findWithCondition(limit, pageNumber*limit, title, description, priority, completed, sortBy, order);
+        };
+        return this.taskRepository.findWithCondition(limit, pageNumber*limit, null, null, null, null, "id", null);
+    };
+
+    public List<Task> getAllTasks() {
+        return this.taskRepository.getAll(Integer.MAX_VALUE, 0);
     };
 
     public List<Task> getSortedTasks(String sortBy, String order) {
