@@ -26,6 +26,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-oracle")
     implementation("org.projectlombok:lombok:1.18.30")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     "developmentOnly"("org.springframework.boot:spring-boot-devtools")
