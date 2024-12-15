@@ -1,0 +1,35 @@
+services:
+  db:
+    image: gvenzl/oracle-xe:latest
+    restart: always
+    environment:
+      ORACLE_PASSWORD: my_password
+      APP_USER: my_password
+      APP_USER_PASSWORD: my_password
+    ports:
+      - "1521:1521"
+    networks:
+      - network_app
+
+  dbvear:
+    image: dbeaver/cloudbeaver:latest
+    environment:
+      CB_SERVER_NAME: Lab server
+      CB_SERVER_URL: http://localhost:8978/
+      CB_ADMIN_NAME: my_password
+      CB_ADMIN_PASSWORD: my_password
+    depends_on:
+      - db
+    ports:
+      - "8978:8978"
+    volumes:
+      - volume_cloudbeaver:/opt/cloudbeaver/workspace
+    networks:
+      - network_app
+
+networks:
+  network_app:
+    driver: bridge
+
+volumes:
+  volume_cloudbeaver:
