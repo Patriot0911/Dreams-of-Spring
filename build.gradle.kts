@@ -27,11 +27,11 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.30")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // testImplementation("org.springframework.boot:spring-boot-starter-test")
     "developmentOnly"("org.springframework.boot:spring-boot-devtools")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+// tasks.withType<Test> {
+//     useJUnitPlatform()
+// }
